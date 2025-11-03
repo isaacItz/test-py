@@ -11,6 +11,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         echo 'Construyendo imagen Docker...'
+	sh  'ls'
         sh 'docker build -t $IMAGE_NAME .'
       }
     }
