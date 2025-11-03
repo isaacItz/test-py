@@ -23,7 +23,16 @@ pipeline {
         sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 $IMAGE_NAME'
       }
     }
-
+	stage('Push to DockerHub') {
+	    steps {
+		withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+			sh 'echo $USER'
+		    sh 'echo $PASS | docker login -u $USER --password-stdin'
+		    sh 'docker tag $IMAGE_NAME $USER/$IMAGE_NAME:latest'
+		    sh 'docker push $USER/$IMAGE_NAME:latest'
+		}
+	    }
+	}
   }
   environment {
     IMAGE_NAME = 'flask-api'
